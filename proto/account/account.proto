@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package org.dakstudios.srv.auth.account;
+
+service Account {
+    rpc Read(ReadRequest) returns (ReadResponse) {}
+    rpc Create(CreateRequest) returns (CreateResponse) {}
+    rpc Update(UpdateRequest) returns (UpdateResponse) {}
+    rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+    rpc Search(SearchRequest) returns (SearchResponse) {}
+}
+
+message User {
+    // user uuid
+    string id = 1;
+    // user roles
+    repeated Role roles = 2;
+    
+    string first_name = 3;
+    string last_name = 4;
+    string email = 5;
+
+    // unix timestamp
+    int64 created = 6;
+    // unix timestamp
+    int64 updated = 7;
+}
+
+message Role {
+    // role uuid
+    string id = 1;
+    // role name
+    string name = 2;
+    // role permissions
+    repeated Permission permissions = 3;
+}
+
+message Permission {
+    // permission id
+    string id = 1;
+}
+
+message ReadRequest {
+    string id = 1;
+}
+
+message ReadResponse {
+    User account = 1;
+}
+
+message CreateRequest {
+    // account id should be blank
+    User account = 1;
+}
+
+message CreateResponse { 
+    // returns nothing
+}
+
+message UpdateRequest {
+    // account id cannot be changed
+    User account = 1;
+}
+
+message UpdateResponse {
+    // returns nothing
+}
+
+message DeleteRequest {
+    string id = 1;
+}
+
+message DeleteResponse {
+    // returns nothing
+}
+
+message SearchRequest {
+    // supports pagination
+    int64 limit = 1;
+    int64 offset = 2;
+}
+
+message SearchResponse {
+    repeated User accounts = 1;
+}
+

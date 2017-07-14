@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package org.dakstudios.srv.auth.jwt;
+
+service JWT {
+    rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
+    rpc Authorize(AuthorizeRequest) returns (AuthorizeResponse) {}
+}
+
+message Token {
+    // jwt token
+    string token = 1;
+}
+
+message AuthenticateRequest {
+    // user email
+    string email = 1;
+    // user password
+    string password = 2;
+}
+
+message AuthenticateResponse {
+    // jwt token
+    Token token = 1;
+}
+
+message AuthorizeRequest {
+    // jwt token
+    Token token = 1;
+    // permission
+    string permission = 2;
+}
+
+message AuthorizeResponse {
+    // true if user authorized for the action
+    bool authorized = 1;
+}
+
