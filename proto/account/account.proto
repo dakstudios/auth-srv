@@ -2,12 +2,20 @@ syntax = "proto3";
 
 package org.dakstudios.srv.auth.account;
 
-service Account {
-    rpc Read(ReadRequest) returns (ReadResponse) {}
-    rpc Create(CreateRequest) returns (CreateResponse) {}
-    rpc Update(UpdateRequest) returns (UpdateResponse) {}
-    rpc Delete(DeleteRequest) returns (DeleteResponse) {}
-    rpc Search(SearchRequest) returns (SearchResponse) {}
+service AccountService {
+    rpc Read(ReadUserRequest) returns (ReadUserResponse) {}
+    rpc Create(CreateUserRequest) returns (CreateUserResponse) {}
+    rpc Update(UpdateUserRequest) returns (UpdateUserResponse) {}
+    rpc Delete(DeleteUserRequest) returns (DeleteUserResponse) {}
+    rpc Search(SearchUserRequest) returns (SearchUserResponse) {}
+}
+
+service RoleService {
+    rpc Read(ReadRoleRequest) returns (ReadRoleResponse) {}
+    rpc ReadAll(ReadAllRolesRequest) returns (ReadAllRolesResponse) {}
+    rpc Create(CreateRoleRequest) returns (CreateRoleResponse) {}
+    rpc Update(UpdateRoleRequest) returns (UpdateRoleResponse) {}
+    rpc Delete(DeleteRoleRequest) returns (DeleteRoleResponse) {}
 }
 
 message User {
@@ -20,10 +28,13 @@ message User {
     string last_name = 4;
     string email = 5;
 
+    // may be blank
+    string password = 6;
+
     // unix timestamp
-    int64 created = 6;
+    int64 created = 7;
     // unix timestamp
-    int64 updated = 7;
+    int64 updated = 8;
 }
 
 message Role {
@@ -32,55 +43,90 @@ message Role {
     // role name
     string name = 2;
     // role permissions
-    repeated Permission permissions = 3;
+    repeated string permissions = 3;
 }
 
-message Permission {
-    // permission id
+message ReadUserRequest {
     string id = 1;
 }
 
-message ReadRequest {
-    string id = 1;
-}
-
-message ReadResponse {
+message ReadUserResponse {
     User account = 1;
 }
 
-message CreateRequest {
+message CreateUserRequest {
     // account id should be blank
     User account = 1;
 }
 
-message CreateResponse { 
+message CreateUserResponse { 
     // returns nothing
 }
 
-message UpdateRequest {
+message UpdateUserRequest {
     // account id cannot be changed
     User account = 1;
 }
 
-message UpdateResponse {
+message UpdateUserResponse {
     // returns nothing
 }
 
-message DeleteRequest {
+message DeleteUserRequest {
     string id = 1;
 }
 
-message DeleteResponse {
+message DeleteUserResponse {
     // returns nothing
 }
 
-message SearchRequest {
+message SearchUserRequest {
     // supports pagination
     int64 limit = 1;
     int64 offset = 2;
 }
 
-message SearchResponse {
+message SearchUserResponse {
     repeated User accounts = 1;
+}
+
+message ReadRoleRequest {
+    string id = 1;
+}
+
+message ReadRoleResponse {
+    Role role = 1;
+}
+
+message ReadAllRolesRequest {
+    // get nothing
+}
+
+message ReadAllRolesResponse {
+    repeated Role roles = 1;
+}
+
+message CreateRoleRequest {
+    Role role = 1;
+}
+
+message CreateRoleResponse {
+    // returns nothing
+}
+
+message UpdateRoleRequest {
+    Role role = 1;
+}
+
+message UpdateRoleResponse {
+    // returns nothing
+}
+
+message DeleteRoleRequest {
+    string id = 1;
+}
+
+message DeleteRoleResponse {
+    // returns nothing
 }
 

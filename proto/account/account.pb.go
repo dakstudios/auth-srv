@@ -10,17 +10,26 @@ It is generated from these files:
 It has these top-level messages:
 	User
 	Role
-	Permission
-	ReadRequest
-	ReadResponse
-	CreateRequest
-	CreateResponse
-	UpdateRequest
-	UpdateResponse
-	DeleteRequest
-	DeleteResponse
-	SearchRequest
-	SearchResponse
+	ReadUserRequest
+	ReadUserResponse
+	CreateUserRequest
+	CreateUserResponse
+	UpdateUserRequest
+	UpdateUserResponse
+	DeleteUserRequest
+	DeleteUserResponse
+	SearchUserRequest
+	SearchUserResponse
+	ReadRoleRequest
+	ReadRoleResponse
+	ReadAllRolesRequest
+	ReadAllRolesResponse
+	CreateRoleRequest
+	CreateRoleResponse
+	UpdateRoleRequest
+	UpdateRoleResponse
+	DeleteRoleRequest
+	DeleteRoleResponse
 */
 package org_dakstudios_srv_auth_account
 
@@ -53,10 +62,12 @@ type User struct {
 	FirstName string  `protobuf:"bytes,3,opt,name=first_name,json=firstName" json:"first_name,omitempty"`
 	LastName  string  `protobuf:"bytes,4,opt,name=last_name,json=lastName" json:"last_name,omitempty"`
 	Email     string  `protobuf:"bytes,5,opt,name=email" json:"email,omitempty"`
+	// may be blank
+	Password string `protobuf:"bytes,6,opt,name=password" json:"password,omitempty"`
 	// unix timestamp
-	Created int64 `protobuf:"varint,6,opt,name=created" json:"created,omitempty"`
+	Created int64 `protobuf:"varint,7,opt,name=created" json:"created,omitempty"`
 	// unix timestamp
-	Updated int64 `protobuf:"varint,7,opt,name=updated" json:"updated,omitempty"`
+	Updated int64 `protobuf:"varint,8,opt,name=updated" json:"updated,omitempty"`
 }
 
 func (m *User) Reset()                    { *m = User{} }
@@ -99,6 +110,13 @@ func (m *User) GetEmail() string {
 	return ""
 }
 
+func (m *User) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
 func (m *User) GetCreated() int64 {
 	if m != nil {
 		return m.Created
@@ -119,7 +137,7 @@ type Role struct {
 	// role name
 	Name string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
 	// role permissions
-	Permissions []*Permission `protobuf:"bytes,3,rep,name=permissions" json:"permissions,omitempty"`
+	Permissions []string `protobuf:"bytes,3,rep,name=permissions" json:"permissions,omitempty"`
 }
 
 func (m *Role) Reset()                    { *m = Role{} }
@@ -141,191 +159,311 @@ func (m *Role) GetName() string {
 	return ""
 }
 
-func (m *Role) GetPermissions() []*Permission {
+func (m *Role) GetPermissions() []string {
 	if m != nil {
 		return m.Permissions
 	}
 	return nil
 }
 
-type Permission struct {
-	// permission id
+type ReadUserRequest struct {
 	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 }
 
-func (m *Permission) Reset()                    { *m = Permission{} }
-func (m *Permission) String() string            { return proto.CompactTextString(m) }
-func (*Permission) ProtoMessage()               {}
-func (*Permission) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+func (m *ReadUserRequest) Reset()                    { *m = ReadUserRequest{} }
+func (m *ReadUserRequest) String() string            { return proto.CompactTextString(m) }
+func (*ReadUserRequest) ProtoMessage()               {}
+func (*ReadUserRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
-func (m *Permission) GetId() string {
+func (m *ReadUserRequest) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-type ReadRequest struct {
-	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
-}
-
-func (m *ReadRequest) Reset()                    { *m = ReadRequest{} }
-func (m *ReadRequest) String() string            { return proto.CompactTextString(m) }
-func (*ReadRequest) ProtoMessage()               {}
-func (*ReadRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
-
-func (m *ReadRequest) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
-type ReadResponse struct {
+type ReadUserResponse struct {
 	Account *User `protobuf:"bytes,1,opt,name=account" json:"account,omitempty"`
 }
 
-func (m *ReadResponse) Reset()                    { *m = ReadResponse{} }
-func (m *ReadResponse) String() string            { return proto.CompactTextString(m) }
-func (*ReadResponse) ProtoMessage()               {}
-func (*ReadResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+func (m *ReadUserResponse) Reset()                    { *m = ReadUserResponse{} }
+func (m *ReadUserResponse) String() string            { return proto.CompactTextString(m) }
+func (*ReadUserResponse) ProtoMessage()               {}
+func (*ReadUserResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
-func (m *ReadResponse) GetAccount() *User {
+func (m *ReadUserResponse) GetAccount() *User {
 	if m != nil {
 		return m.Account
 	}
 	return nil
 }
 
-type CreateRequest struct {
+type CreateUserRequest struct {
 	// account id should be blank
 	Account *User `protobuf:"bytes,1,opt,name=account" json:"account,omitempty"`
 }
 
-func (m *CreateRequest) Reset()                    { *m = CreateRequest{} }
-func (m *CreateRequest) String() string            { return proto.CompactTextString(m) }
-func (*CreateRequest) ProtoMessage()               {}
-func (*CreateRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+func (m *CreateUserRequest) Reset()                    { *m = CreateUserRequest{} }
+func (m *CreateUserRequest) String() string            { return proto.CompactTextString(m) }
+func (*CreateUserRequest) ProtoMessage()               {}
+func (*CreateUserRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
-func (m *CreateRequest) GetAccount() *User {
+func (m *CreateUserRequest) GetAccount() *User {
 	if m != nil {
 		return m.Account
 	}
 	return nil
 }
 
-type CreateResponse struct {
+type CreateUserResponse struct {
 }
 
-func (m *CreateResponse) Reset()                    { *m = CreateResponse{} }
-func (m *CreateResponse) String() string            { return proto.CompactTextString(m) }
-func (*CreateResponse) ProtoMessage()               {}
-func (*CreateResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
+func (m *CreateUserResponse) Reset()                    { *m = CreateUserResponse{} }
+func (m *CreateUserResponse) String() string            { return proto.CompactTextString(m) }
+func (*CreateUserResponse) ProtoMessage()               {}
+func (*CreateUserResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
 
-type UpdateRequest struct {
+type UpdateUserRequest struct {
 	// account id cannot be changed
 	Account *User `protobuf:"bytes,1,opt,name=account" json:"account,omitempty"`
 }
 
-func (m *UpdateRequest) Reset()                    { *m = UpdateRequest{} }
-func (m *UpdateRequest) String() string            { return proto.CompactTextString(m) }
-func (*UpdateRequest) ProtoMessage()               {}
-func (*UpdateRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
+func (m *UpdateUserRequest) Reset()                    { *m = UpdateUserRequest{} }
+func (m *UpdateUserRequest) String() string            { return proto.CompactTextString(m) }
+func (*UpdateUserRequest) ProtoMessage()               {}
+func (*UpdateUserRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
 
-func (m *UpdateRequest) GetAccount() *User {
+func (m *UpdateUserRequest) GetAccount() *User {
 	if m != nil {
 		return m.Account
 	}
 	return nil
 }
 
-type UpdateResponse struct {
+type UpdateUserResponse struct {
 }
 
-func (m *UpdateResponse) Reset()                    { *m = UpdateResponse{} }
-func (m *UpdateResponse) String() string            { return proto.CompactTextString(m) }
-func (*UpdateResponse) ProtoMessage()               {}
-func (*UpdateResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
+func (m *UpdateUserResponse) Reset()                    { *m = UpdateUserResponse{} }
+func (m *UpdateUserResponse) String() string            { return proto.CompactTextString(m) }
+func (*UpdateUserResponse) ProtoMessage()               {}
+func (*UpdateUserResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
 
-type DeleteRequest struct {
+type DeleteUserRequest struct {
 	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 }
 
-func (m *DeleteRequest) Reset()                    { *m = DeleteRequest{} }
-func (m *DeleteRequest) String() string            { return proto.CompactTextString(m) }
-func (*DeleteRequest) ProtoMessage()               {}
-func (*DeleteRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
+func (m *DeleteUserRequest) Reset()                    { *m = DeleteUserRequest{} }
+func (m *DeleteUserRequest) String() string            { return proto.CompactTextString(m) }
+func (*DeleteUserRequest) ProtoMessage()               {}
+func (*DeleteUserRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
 
-func (m *DeleteRequest) GetId() string {
+func (m *DeleteUserRequest) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-type DeleteResponse struct {
+type DeleteUserResponse struct {
 }
 
-func (m *DeleteResponse) Reset()                    { *m = DeleteResponse{} }
-func (m *DeleteResponse) String() string            { return proto.CompactTextString(m) }
-func (*DeleteResponse) ProtoMessage()               {}
-func (*DeleteResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
+func (m *DeleteUserResponse) Reset()                    { *m = DeleteUserResponse{} }
+func (m *DeleteUserResponse) String() string            { return proto.CompactTextString(m) }
+func (*DeleteUserResponse) ProtoMessage()               {}
+func (*DeleteUserResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
 
-type SearchRequest struct {
+type SearchUserRequest struct {
 	// supports pagination
 	Limit  int64 `protobuf:"varint,1,opt,name=limit" json:"limit,omitempty"`
 	Offset int64 `protobuf:"varint,2,opt,name=offset" json:"offset,omitempty"`
 }
 
-func (m *SearchRequest) Reset()                    { *m = SearchRequest{} }
-func (m *SearchRequest) String() string            { return proto.CompactTextString(m) }
-func (*SearchRequest) ProtoMessage()               {}
-func (*SearchRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{11} }
+func (m *SearchUserRequest) Reset()                    { *m = SearchUserRequest{} }
+func (m *SearchUserRequest) String() string            { return proto.CompactTextString(m) }
+func (*SearchUserRequest) ProtoMessage()               {}
+func (*SearchUserRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
 
-func (m *SearchRequest) GetLimit() int64 {
+func (m *SearchUserRequest) GetLimit() int64 {
 	if m != nil {
 		return m.Limit
 	}
 	return 0
 }
 
-func (m *SearchRequest) GetOffset() int64 {
+func (m *SearchUserRequest) GetOffset() int64 {
 	if m != nil {
 		return m.Offset
 	}
 	return 0
 }
 
-type SearchResponse struct {
+type SearchUserResponse struct {
 	Accounts []*User `protobuf:"bytes,1,rep,name=accounts" json:"accounts,omitempty"`
 }
 
-func (m *SearchResponse) Reset()                    { *m = SearchResponse{} }
-func (m *SearchResponse) String() string            { return proto.CompactTextString(m) }
-func (*SearchResponse) ProtoMessage()               {}
-func (*SearchResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{12} }
+func (m *SearchUserResponse) Reset()                    { *m = SearchUserResponse{} }
+func (m *SearchUserResponse) String() string            { return proto.CompactTextString(m) }
+func (*SearchUserResponse) ProtoMessage()               {}
+func (*SearchUserResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{11} }
 
-func (m *SearchResponse) GetAccounts() []*User {
+func (m *SearchUserResponse) GetAccounts() []*User {
 	if m != nil {
 		return m.Accounts
 	}
 	return nil
 }
 
+type ReadRoleRequest struct {
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
+}
+
+func (m *ReadRoleRequest) Reset()                    { *m = ReadRoleRequest{} }
+func (m *ReadRoleRequest) String() string            { return proto.CompactTextString(m) }
+func (*ReadRoleRequest) ProtoMessage()               {}
+func (*ReadRoleRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{12} }
+
+func (m *ReadRoleRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type ReadRoleResponse struct {
+	Role *Role `protobuf:"bytes,1,opt,name=role" json:"role,omitempty"`
+}
+
+func (m *ReadRoleResponse) Reset()                    { *m = ReadRoleResponse{} }
+func (m *ReadRoleResponse) String() string            { return proto.CompactTextString(m) }
+func (*ReadRoleResponse) ProtoMessage()               {}
+func (*ReadRoleResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{13} }
+
+func (m *ReadRoleResponse) GetRole() *Role {
+	if m != nil {
+		return m.Role
+	}
+	return nil
+}
+
+type ReadAllRolesRequest struct {
+}
+
+func (m *ReadAllRolesRequest) Reset()                    { *m = ReadAllRolesRequest{} }
+func (m *ReadAllRolesRequest) String() string            { return proto.CompactTextString(m) }
+func (*ReadAllRolesRequest) ProtoMessage()               {}
+func (*ReadAllRolesRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{14} }
+
+type ReadAllRolesResponse struct {
+	Roles []*Role `protobuf:"bytes,1,rep,name=roles" json:"roles,omitempty"`
+}
+
+func (m *ReadAllRolesResponse) Reset()                    { *m = ReadAllRolesResponse{} }
+func (m *ReadAllRolesResponse) String() string            { return proto.CompactTextString(m) }
+func (*ReadAllRolesResponse) ProtoMessage()               {}
+func (*ReadAllRolesResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{15} }
+
+func (m *ReadAllRolesResponse) GetRoles() []*Role {
+	if m != nil {
+		return m.Roles
+	}
+	return nil
+}
+
+type CreateRoleRequest struct {
+	Role *Role `protobuf:"bytes,1,opt,name=role" json:"role,omitempty"`
+}
+
+func (m *CreateRoleRequest) Reset()                    { *m = CreateRoleRequest{} }
+func (m *CreateRoleRequest) String() string            { return proto.CompactTextString(m) }
+func (*CreateRoleRequest) ProtoMessage()               {}
+func (*CreateRoleRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{16} }
+
+func (m *CreateRoleRequest) GetRole() *Role {
+	if m != nil {
+		return m.Role
+	}
+	return nil
+}
+
+type CreateRoleResponse struct {
+}
+
+func (m *CreateRoleResponse) Reset()                    { *m = CreateRoleResponse{} }
+func (m *CreateRoleResponse) String() string            { return proto.CompactTextString(m) }
+func (*CreateRoleResponse) ProtoMessage()               {}
+func (*CreateRoleResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{17} }
+
+type UpdateRoleRequest struct {
+	Role *Role `protobuf:"bytes,1,opt,name=role" json:"role,omitempty"`
+}
+
+func (m *UpdateRoleRequest) Reset()                    { *m = UpdateRoleRequest{} }
+func (m *UpdateRoleRequest) String() string            { return proto.CompactTextString(m) }
+func (*UpdateRoleRequest) ProtoMessage()               {}
+func (*UpdateRoleRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{18} }
+
+func (m *UpdateRoleRequest) GetRole() *Role {
+	if m != nil {
+		return m.Role
+	}
+	return nil
+}
+
+type UpdateRoleResponse struct {
+}
+
+func (m *UpdateRoleResponse) Reset()                    { *m = UpdateRoleResponse{} }
+func (m *UpdateRoleResponse) String() string            { return proto.CompactTextString(m) }
+func (*UpdateRoleResponse) ProtoMessage()               {}
+func (*UpdateRoleResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{19} }
+
+type DeleteRoleRequest struct {
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
+}
+
+func (m *DeleteRoleRequest) Reset()                    { *m = DeleteRoleRequest{} }
+func (m *DeleteRoleRequest) String() string            { return proto.CompactTextString(m) }
+func (*DeleteRoleRequest) ProtoMessage()               {}
+func (*DeleteRoleRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{20} }
+
+func (m *DeleteRoleRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type DeleteRoleResponse struct {
+}
+
+func (m *DeleteRoleResponse) Reset()                    { *m = DeleteRoleResponse{} }
+func (m *DeleteRoleResponse) String() string            { return proto.CompactTextString(m) }
+func (*DeleteRoleResponse) ProtoMessage()               {}
+func (*DeleteRoleResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{21} }
+
 func init() {
 	proto.RegisterType((*User)(nil), "org.dakstudios.srv.auth.account.User")
 	proto.RegisterType((*Role)(nil), "org.dakstudios.srv.auth.account.Role")
-	proto.RegisterType((*Permission)(nil), "org.dakstudios.srv.auth.account.Permission")
-	proto.RegisterType((*ReadRequest)(nil), "org.dakstudios.srv.auth.account.ReadRequest")
-	proto.RegisterType((*ReadResponse)(nil), "org.dakstudios.srv.auth.account.ReadResponse")
-	proto.RegisterType((*CreateRequest)(nil), "org.dakstudios.srv.auth.account.CreateRequest")
-	proto.RegisterType((*CreateResponse)(nil), "org.dakstudios.srv.auth.account.CreateResponse")
-	proto.RegisterType((*UpdateRequest)(nil), "org.dakstudios.srv.auth.account.UpdateRequest")
-	proto.RegisterType((*UpdateResponse)(nil), "org.dakstudios.srv.auth.account.UpdateResponse")
-	proto.RegisterType((*DeleteRequest)(nil), "org.dakstudios.srv.auth.account.DeleteRequest")
-	proto.RegisterType((*DeleteResponse)(nil), "org.dakstudios.srv.auth.account.DeleteResponse")
-	proto.RegisterType((*SearchRequest)(nil), "org.dakstudios.srv.auth.account.SearchRequest")
-	proto.RegisterType((*SearchResponse)(nil), "org.dakstudios.srv.auth.account.SearchResponse")
+	proto.RegisterType((*ReadUserRequest)(nil), "org.dakstudios.srv.auth.account.ReadUserRequest")
+	proto.RegisterType((*ReadUserResponse)(nil), "org.dakstudios.srv.auth.account.ReadUserResponse")
+	proto.RegisterType((*CreateUserRequest)(nil), "org.dakstudios.srv.auth.account.CreateUserRequest")
+	proto.RegisterType((*CreateUserResponse)(nil), "org.dakstudios.srv.auth.account.CreateUserResponse")
+	proto.RegisterType((*UpdateUserRequest)(nil), "org.dakstudios.srv.auth.account.UpdateUserRequest")
+	proto.RegisterType((*UpdateUserResponse)(nil), "org.dakstudios.srv.auth.account.UpdateUserResponse")
+	proto.RegisterType((*DeleteUserRequest)(nil), "org.dakstudios.srv.auth.account.DeleteUserRequest")
+	proto.RegisterType((*DeleteUserResponse)(nil), "org.dakstudios.srv.auth.account.DeleteUserResponse")
+	proto.RegisterType((*SearchUserRequest)(nil), "org.dakstudios.srv.auth.account.SearchUserRequest")
+	proto.RegisterType((*SearchUserResponse)(nil), "org.dakstudios.srv.auth.account.SearchUserResponse")
+	proto.RegisterType((*ReadRoleRequest)(nil), "org.dakstudios.srv.auth.account.ReadRoleRequest")
+	proto.RegisterType((*ReadRoleResponse)(nil), "org.dakstudios.srv.auth.account.ReadRoleResponse")
+	proto.RegisterType((*ReadAllRolesRequest)(nil), "org.dakstudios.srv.auth.account.ReadAllRolesRequest")
+	proto.RegisterType((*ReadAllRolesResponse)(nil), "org.dakstudios.srv.auth.account.ReadAllRolesResponse")
+	proto.RegisterType((*CreateRoleRequest)(nil), "org.dakstudios.srv.auth.account.CreateRoleRequest")
+	proto.RegisterType((*CreateRoleResponse)(nil), "org.dakstudios.srv.auth.account.CreateRoleResponse")
+	proto.RegisterType((*UpdateRoleRequest)(nil), "org.dakstudios.srv.auth.account.UpdateRoleRequest")
+	proto.RegisterType((*UpdateRoleResponse)(nil), "org.dakstudios.srv.auth.account.UpdateRoleResponse")
+	proto.RegisterType((*DeleteRoleRequest)(nil), "org.dakstudios.srv.auth.account.DeleteRoleRequest")
+	proto.RegisterType((*DeleteRoleResponse)(nil), "org.dakstudios.srv.auth.account.DeleteRoleResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -333,37 +471,37 @@ var _ context.Context
 var _ client.Option
 var _ server.Option
 
-// Client API for Account service
+// Client API for AccountService service
 
-type AccountClient interface {
-	Read(ctx context.Context, in *ReadRequest, opts ...client.CallOption) (*ReadResponse, error)
-	Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error)
-	Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error)
-	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
-	Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*SearchResponse, error)
+type AccountServiceClient interface {
+	Read(ctx context.Context, in *ReadUserRequest, opts ...client.CallOption) (*ReadUserResponse, error)
+	Create(ctx context.Context, in *CreateUserRequest, opts ...client.CallOption) (*CreateUserResponse, error)
+	Update(ctx context.Context, in *UpdateUserRequest, opts ...client.CallOption) (*UpdateUserResponse, error)
+	Delete(ctx context.Context, in *DeleteUserRequest, opts ...client.CallOption) (*DeleteUserResponse, error)
+	Search(ctx context.Context, in *SearchUserRequest, opts ...client.CallOption) (*SearchUserResponse, error)
 }
 
-type accountClient struct {
+type accountServiceClient struct {
 	c           client.Client
 	serviceName string
 }
 
-func NewAccountClient(serviceName string, c client.Client) AccountClient {
+func NewAccountServiceClient(serviceName string, c client.Client) AccountServiceClient {
 	if c == nil {
 		c = client.NewClient()
 	}
 	if len(serviceName) == 0 {
 		serviceName = "org.dakstudios.srv.auth.account"
 	}
-	return &accountClient{
+	return &accountServiceClient{
 		c:           c,
 		serviceName: serviceName,
 	}
 }
 
-func (c *accountClient) Read(ctx context.Context, in *ReadRequest, opts ...client.CallOption) (*ReadResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Account.Read", in)
-	out := new(ReadResponse)
+func (c *accountServiceClient) Read(ctx context.Context, in *ReadUserRequest, opts ...client.CallOption) (*ReadUserResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "AccountService.Read", in)
+	out := new(ReadUserResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -371,9 +509,9 @@ func (c *accountClient) Read(ctx context.Context, in *ReadRequest, opts ...clien
 	return out, nil
 }
 
-func (c *accountClient) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Account.Create", in)
-	out := new(CreateResponse)
+func (c *accountServiceClient) Create(ctx context.Context, in *CreateUserRequest, opts ...client.CallOption) (*CreateUserResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "AccountService.Create", in)
+	out := new(CreateUserResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -381,9 +519,9 @@ func (c *accountClient) Create(ctx context.Context, in *CreateRequest, opts ...c
 	return out, nil
 }
 
-func (c *accountClient) Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Account.Update", in)
-	out := new(UpdateResponse)
+func (c *accountServiceClient) Update(ctx context.Context, in *UpdateUserRequest, opts ...client.CallOption) (*UpdateUserResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "AccountService.Update", in)
+	out := new(UpdateUserResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -391,9 +529,9 @@ func (c *accountClient) Update(ctx context.Context, in *UpdateRequest, opts ...c
 	return out, nil
 }
 
-func (c *accountClient) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Account.Delete", in)
-	out := new(DeleteResponse)
+func (c *accountServiceClient) Delete(ctx context.Context, in *DeleteUserRequest, opts ...client.CallOption) (*DeleteUserResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "AccountService.Delete", in)
+	out := new(DeleteUserResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -401,9 +539,9 @@ func (c *accountClient) Delete(ctx context.Context, in *DeleteRequest, opts ...c
 	return out, nil
 }
 
-func (c *accountClient) Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*SearchResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Account.Search", in)
-	out := new(SearchResponse)
+func (c *accountServiceClient) Search(ctx context.Context, in *SearchUserRequest, opts ...client.CallOption) (*SearchUserResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "AccountService.Search", in)
+	out := new(SearchUserResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -411,77 +549,202 @@ func (c *accountClient) Search(ctx context.Context, in *SearchRequest, opts ...c
 	return out, nil
 }
 
-// Server API for Account service
+// Server API for AccountService service
 
-type AccountHandler interface {
-	Read(context.Context, *ReadRequest, *ReadResponse) error
-	Create(context.Context, *CreateRequest, *CreateResponse) error
-	Update(context.Context, *UpdateRequest, *UpdateResponse) error
-	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
-	Search(context.Context, *SearchRequest, *SearchResponse) error
+type AccountServiceHandler interface {
+	Read(context.Context, *ReadUserRequest, *ReadUserResponse) error
+	Create(context.Context, *CreateUserRequest, *CreateUserResponse) error
+	Update(context.Context, *UpdateUserRequest, *UpdateUserResponse) error
+	Delete(context.Context, *DeleteUserRequest, *DeleteUserResponse) error
+	Search(context.Context, *SearchUserRequest, *SearchUserResponse) error
 }
 
-func RegisterAccountHandler(s server.Server, hdlr AccountHandler, opts ...server.HandlerOption) {
-	s.Handle(s.NewHandler(&Account{hdlr}, opts...))
+func RegisterAccountServiceHandler(s server.Server, hdlr AccountServiceHandler, opts ...server.HandlerOption) {
+	s.Handle(s.NewHandler(&AccountService{hdlr}, opts...))
 }
 
-type Account struct {
-	AccountHandler
+type AccountService struct {
+	AccountServiceHandler
 }
 
-func (h *Account) Read(ctx context.Context, in *ReadRequest, out *ReadResponse) error {
-	return h.AccountHandler.Read(ctx, in, out)
+func (h *AccountService) Read(ctx context.Context, in *ReadUserRequest, out *ReadUserResponse) error {
+	return h.AccountServiceHandler.Read(ctx, in, out)
 }
 
-func (h *Account) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
-	return h.AccountHandler.Create(ctx, in, out)
+func (h *AccountService) Create(ctx context.Context, in *CreateUserRequest, out *CreateUserResponse) error {
+	return h.AccountServiceHandler.Create(ctx, in, out)
 }
 
-func (h *Account) Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error {
-	return h.AccountHandler.Update(ctx, in, out)
+func (h *AccountService) Update(ctx context.Context, in *UpdateUserRequest, out *UpdateUserResponse) error {
+	return h.AccountServiceHandler.Update(ctx, in, out)
 }
 
-func (h *Account) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
-	return h.AccountHandler.Delete(ctx, in, out)
+func (h *AccountService) Delete(ctx context.Context, in *DeleteUserRequest, out *DeleteUserResponse) error {
+	return h.AccountServiceHandler.Delete(ctx, in, out)
 }
 
-func (h *Account) Search(ctx context.Context, in *SearchRequest, out *SearchResponse) error {
-	return h.AccountHandler.Search(ctx, in, out)
+func (h *AccountService) Search(ctx context.Context, in *SearchUserRequest, out *SearchUserResponse) error {
+	return h.AccountServiceHandler.Search(ctx, in, out)
+}
+
+// Client API for RoleService service
+
+type RoleServiceClient interface {
+	Read(ctx context.Context, in *ReadRoleRequest, opts ...client.CallOption) (*ReadRoleResponse, error)
+	ReadAll(ctx context.Context, in *ReadAllRolesRequest, opts ...client.CallOption) (*ReadAllRolesResponse, error)
+	Create(ctx context.Context, in *CreateRoleRequest, opts ...client.CallOption) (*CreateRoleResponse, error)
+	Update(ctx context.Context, in *UpdateRoleRequest, opts ...client.CallOption) (*UpdateRoleResponse, error)
+	Delete(ctx context.Context, in *DeleteRoleRequest, opts ...client.CallOption) (*DeleteRoleResponse, error)
+}
+
+type roleServiceClient struct {
+	c           client.Client
+	serviceName string
+}
+
+func NewRoleServiceClient(serviceName string, c client.Client) RoleServiceClient {
+	if c == nil {
+		c = client.NewClient()
+	}
+	if len(serviceName) == 0 {
+		serviceName = "org.dakstudios.srv.auth.account"
+	}
+	return &roleServiceClient{
+		c:           c,
+		serviceName: serviceName,
+	}
+}
+
+func (c *roleServiceClient) Read(ctx context.Context, in *ReadRoleRequest, opts ...client.CallOption) (*ReadRoleResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "RoleService.Read", in)
+	out := new(ReadRoleResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) ReadAll(ctx context.Context, in *ReadAllRolesRequest, opts ...client.CallOption) (*ReadAllRolesResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "RoleService.ReadAll", in)
+	out := new(ReadAllRolesResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) Create(ctx context.Context, in *CreateRoleRequest, opts ...client.CallOption) (*CreateRoleResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "RoleService.Create", in)
+	out := new(CreateRoleResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) Update(ctx context.Context, in *UpdateRoleRequest, opts ...client.CallOption) (*UpdateRoleResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "RoleService.Update", in)
+	out := new(UpdateRoleResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) Delete(ctx context.Context, in *DeleteRoleRequest, opts ...client.CallOption) (*DeleteRoleResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "RoleService.Delete", in)
+	out := new(DeleteRoleResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for RoleService service
+
+type RoleServiceHandler interface {
+	Read(context.Context, *ReadRoleRequest, *ReadRoleResponse) error
+	ReadAll(context.Context, *ReadAllRolesRequest, *ReadAllRolesResponse) error
+	Create(context.Context, *CreateRoleRequest, *CreateRoleResponse) error
+	Update(context.Context, *UpdateRoleRequest, *UpdateRoleResponse) error
+	Delete(context.Context, *DeleteRoleRequest, *DeleteRoleResponse) error
+}
+
+func RegisterRoleServiceHandler(s server.Server, hdlr RoleServiceHandler, opts ...server.HandlerOption) {
+	s.Handle(s.NewHandler(&RoleService{hdlr}, opts...))
+}
+
+type RoleService struct {
+	RoleServiceHandler
+}
+
+func (h *RoleService) Read(ctx context.Context, in *ReadRoleRequest, out *ReadRoleResponse) error {
+	return h.RoleServiceHandler.Read(ctx, in, out)
+}
+
+func (h *RoleService) ReadAll(ctx context.Context, in *ReadAllRolesRequest, out *ReadAllRolesResponse) error {
+	return h.RoleServiceHandler.ReadAll(ctx, in, out)
+}
+
+func (h *RoleService) Create(ctx context.Context, in *CreateRoleRequest, out *CreateRoleResponse) error {
+	return h.RoleServiceHandler.Create(ctx, in, out)
+}
+
+func (h *RoleService) Update(ctx context.Context, in *UpdateRoleRequest, out *UpdateRoleResponse) error {
+	return h.RoleServiceHandler.Update(ctx, in, out)
+}
+
+func (h *RoleService) Delete(ctx context.Context, in *DeleteRoleRequest, out *DeleteRoleResponse) error {
+	return h.RoleServiceHandler.Delete(ctx, in, out)
 }
 
 func init() { proto.RegisterFile("proto/account/account.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 484 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0x51, 0x6b, 0xdb, 0x30,
-	0x10, 0xae, 0x63, 0x27, 0x69, 0x2e, 0x4b, 0x28, 0xa2, 0x0c, 0xd3, 0xae, 0x34, 0x18, 0x06, 0x81,
-	0x6d, 0x2e, 0x74, 0x8f, 0x63, 0x8c, 0xb2, 0xbd, 0x6e, 0x2b, 0x2a, 0x7d, 0x1e, 0x5a, 0x7c, 0x59,
-	0x45, 0xed, 0x28, 0x93, 0xec, 0xc1, 0xfe, 0xcf, 0xfe, 0xd4, 0xfe, 0xcd, 0xf0, 0x49, 0x6a, 0xea,
-	0xe4, 0x21, 0x82, 0xf5, 0x29, 0x39, 0x7d, 0xf7, 0xdd, 0x77, 0xba, 0xfb, 0x64, 0x38, 0x5d, 0x6b,
-	0x55, 0xab, 0x0b, 0xb1, 0x58, 0xa8, 0x66, 0x55, 0xfb, 0xdf, 0x9c, 0x4e, 0xd9, 0xb9, 0xd2, 0x3f,
-	0xf2, 0x42, 0xdc, 0x9b, 0xba, 0x29, 0xa4, 0x32, 0xb9, 0xd1, 0xbf, 0x72, 0xd1, 0xd4, 0x77, 0xb9,
-	0x4b, 0xcb, 0xfe, 0x46, 0x90, 0xdc, 0x1a, 0xd4, 0x6c, 0x0a, 0x3d, 0x59, 0xa4, 0xd1, 0x2c, 0x9a,
-	0x8f, 0x78, 0x4f, 0x16, 0xec, 0x1d, 0xf4, 0xb5, 0x2a, 0xd1, 0xa4, 0xbd, 0x59, 0x3c, 0x1f, 0x5f,
-	0xbe, 0xcc, 0xf7, 0x54, 0xca, 0xb9, 0x2a, 0x91, 0x5b, 0x0e, 0x3b, 0x03, 0x58, 0x4a, 0x6d, 0xea,
-	0x6f, 0x2b, 0x51, 0x61, 0x1a, 0x53, 0xd1, 0x11, 0x9d, 0x7c, 0x11, 0x15, 0xb2, 0x53, 0x18, 0x95,
-	0xc2, 0xa3, 0x09, 0xa1, 0x87, 0xed, 0x01, 0x81, 0xc7, 0xd0, 0xc7, 0x4a, 0xc8, 0x32, 0xed, 0x13,
-	0x60, 0x03, 0x96, 0xc2, 0x70, 0xa1, 0x51, 0xd4, 0x58, 0xa4, 0x83, 0x59, 0x34, 0x8f, 0xb9, 0x0f,
-	0x5b, 0xa4, 0x59, 0x17, 0x84, 0x0c, 0x2d, 0xe2, 0xc2, 0xec, 0x37, 0x24, 0x6d, 0x53, 0x3b, 0x57,
-	0x63, 0x90, 0x90, 0x72, 0x8f, 0x4e, 0xe8, 0x3f, 0xfb, 0x0c, 0xe3, 0x35, 0xea, 0x4a, 0x1a, 0x23,
-	0xd5, 0xca, 0xa4, 0x31, 0x5d, 0xfa, 0xd5, 0xde, 0x4b, 0x5f, 0x3f, 0x70, 0xf8, 0x63, 0x7e, 0xf6,
-	0x02, 0x60, 0x03, 0x6d, 0x37, 0x90, 0x9d, 0xc1, 0x98, 0xa3, 0x28, 0x38, 0xfe, 0x6c, 0xd0, 0xd4,
-	0x3b, 0xf0, 0x57, 0x78, 0x66, 0x61, 0xb3, 0x56, 0x2b, 0x83, 0xec, 0x03, 0x0c, 0x9d, 0x1e, 0x25,
-	0x85, 0x2c, 0xa3, 0x5d, 0x29, 0xf7, 0xac, 0xec, 0x1a, 0x26, 0x1f, 0x69, 0x5a, 0x5e, 0xf1, 0xbf,
-	0x2b, 0x1e, 0xc1, 0xd4, 0x57, 0xb4, 0x4d, 0xb6, 0x1a, 0xb7, 0x34, 0xf7, 0xa7, 0xd4, 0xf0, 0x15,
-	0x9d, 0xc6, 0x39, 0x4c, 0x3e, 0x61, 0x89, 0x1b, 0x8d, 0xed, 0xc9, 0x1d, 0xc1, 0xd4, 0x27, 0x38,
-	0xca, 0x7b, 0x98, 0xdc, 0xa0, 0xd0, 0x8b, 0x3b, 0x4f, 0x39, 0x86, 0x7e, 0x29, 0x2b, 0x69, 0x9b,
-	0x8a, 0xb9, 0x0d, 0xd8, 0x73, 0x18, 0xa8, 0xe5, 0xd2, 0x60, 0x4d, 0xa6, 0x88, 0xb9, 0x8b, 0xb2,
-	0x1b, 0x98, 0x7a, 0xba, 0x5b, 0xc6, 0x15, 0x1c, 0xba, 0x06, 0x4d, 0x1a, 0x05, 0x3e, 0x0d, 0xba,
-	0xd7, 0x03, 0xed, 0xf2, 0x4f, 0x02, 0xc3, 0x2b, 0x1b, 0x30, 0x84, 0xa4, 0xdd, 0x35, 0x7b, 0xbd,
-	0xff, 0x7d, 0x6d, 0x1c, 0x73, 0xf2, 0x26, 0x30, 0xdb, 0x0d, 0xe1, 0x80, 0xdd, 0xc3, 0xc0, 0xee,
-	0x8b, 0xe5, 0x7b, 0xa9, 0x1d, 0xab, 0x9c, 0x5c, 0x04, 0xe7, 0x3f, 0x16, 0xb3, 0x8b, 0x0b, 0x10,
-	0xeb, 0x78, 0x26, 0x40, 0x6c, 0xcb, 0x11, 0x24, 0x66, 0x57, 0x1e, 0x20, 0xd6, 0x31, 0x4f, 0x80,
-	0xd8, 0x96, 0x97, 0x48, 0xcc, 0xda, 0x21, 0x40, 0xac, 0x63, 0xbb, 0x00, 0xb1, 0xae, 0xcf, 0xb2,
-	0x83, 0xef, 0x03, 0xfa, 0x84, 0xbf, 0xfd, 0x17, 0x00, 0x00, 0xff, 0xff, 0x86, 0x7e, 0x17, 0xbe,
-	0xe1, 0x05, 0x00, 0x00,
+	// 636 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x4d, 0x8f, 0xd3, 0x30,
+	0x10, 0x6d, 0x9a, 0xf4, 0x6b, 0x56, 0x5a, 0x58, 0x53, 0x50, 0xd4, 0x15, 0xa2, 0x04, 0x21, 0xf5,
+	0x14, 0xa0, 0x0b, 0x07, 0xc4, 0x01, 0x55, 0x70, 0x84, 0x3d, 0xa4, 0xac, 0x38, 0xa2, 0xd0, 0xb8,
+	0x6c, 0x44, 0x52, 0x17, 0x3b, 0x5d, 0xf8, 0x9f, 0x88, 0x9f, 0xc2, 0x1d, 0x79, 0xec, 0x14, 0xb7,
+	0x29, 0xd4, 0xd9, 0xee, 0xa9, 0xf5, 0x8c, 0xdf, 0xbc, 0xf1, 0xf8, 0xf9, 0x29, 0x70, 0xba, 0xe4,
+	0xac, 0x60, 0x4f, 0xe2, 0xd9, 0x8c, 0xad, 0x16, 0x45, 0xf9, 0x1b, 0x62, 0x94, 0x3c, 0x60, 0xfc,
+	0x4b, 0x98, 0xc4, 0x5f, 0x45, 0xb1, 0x4a, 0x52, 0x26, 0x42, 0xc1, 0xaf, 0xc2, 0x78, 0x55, 0x5c,
+	0x86, 0x7a, 0x5b, 0xf0, 0xdb, 0x01, 0xef, 0x42, 0x50, 0x4e, 0x8e, 0xa1, 0x99, 0x26, 0xbe, 0x33,
+	0x74, 0x46, 0xbd, 0xa8, 0x99, 0x26, 0xe4, 0x15, 0xb4, 0x38, 0xcb, 0xa8, 0xf0, 0x9b, 0x43, 0x77,
+	0x74, 0x34, 0x7e, 0x1c, 0xee, 0xa9, 0x14, 0x46, 0x2c, 0xa3, 0x91, 0xc2, 0x90, 0xfb, 0x00, 0xf3,
+	0x94, 0x8b, 0xe2, 0xd3, 0x22, 0xce, 0xa9, 0xef, 0x62, 0xd1, 0x1e, 0x46, 0xce, 0xe3, 0x9c, 0x92,
+	0x53, 0xe8, 0x65, 0x71, 0x99, 0xf5, 0x30, 0xdb, 0x95, 0x01, 0x4c, 0xf6, 0xa1, 0x45, 0xf3, 0x38,
+	0xcd, 0xfc, 0x16, 0x26, 0xd4, 0x82, 0x0c, 0xa0, 0xbb, 0x8c, 0x85, 0xf8, 0xce, 0x78, 0xe2, 0xb7,
+	0x15, 0xa2, 0x5c, 0x13, 0x1f, 0x3a, 0x33, 0x4e, 0xe3, 0x82, 0x26, 0x7e, 0x67, 0xe8, 0x8c, 0xdc,
+	0xa8, 0x5c, 0xca, 0xcc, 0x6a, 0x99, 0x60, 0xa6, 0xab, 0x32, 0x7a, 0x19, 0xbc, 0x03, 0x4f, 0x36,
+	0x5c, 0x39, 0x36, 0x01, 0x0f, 0xbb, 0x6a, 0x62, 0x04, 0xff, 0x93, 0x21, 0x1c, 0x2d, 0x29, 0xcf,
+	0x53, 0x21, 0x52, 0xb6, 0x10, 0xbe, 0x3b, 0x74, 0x47, 0xbd, 0xc8, 0x0c, 0x05, 0x0f, 0xe1, 0x56,
+	0x44, 0xe3, 0x44, 0x0e, 0x32, 0xa2, 0xdf, 0x56, 0x54, 0x14, 0xdb, 0x85, 0x83, 0x29, 0xdc, 0xfe,
+	0xbb, 0x45, 0x2c, 0xd9, 0x42, 0x50, 0xf2, 0x1a, 0x3a, 0x7a, 0x7a, 0xb8, 0xd1, 0x66, 0xca, 0x88,
+	0x2f, 0x51, 0xc1, 0x07, 0x38, 0x79, 0x83, 0x47, 0x35, 0x99, 0x0f, 0xae, 0xda, 0x07, 0x62, 0x56,
+	0x55, 0xcd, 0x4a, 0xae, 0x0b, 0x1c, 0xde, 0x4d, 0x73, 0x99, 0x55, 0x35, 0xd7, 0x23, 0x38, 0x79,
+	0x4b, 0x33, 0xba, 0xc9, 0xb5, 0x3d, 0xd1, 0x3e, 0x10, 0x73, 0x93, 0x86, 0x4e, 0xe0, 0x64, 0x4a,
+	0x63, 0x3e, 0xbb, 0x34, 0xa1, 0x7d, 0x68, 0x65, 0x69, 0x9e, 0xaa, 0x26, 0xdd, 0x48, 0x2d, 0xc8,
+	0x3d, 0x68, 0xb3, 0xf9, 0x5c, 0xd0, 0x02, 0x6f, 0xdb, 0x8d, 0xf4, 0x2a, 0xf8, 0x08, 0xc4, 0x2c,
+	0xa1, 0x2f, 0x6b, 0x02, 0x5d, 0xdd, 0xb4, 0xf0, 0x1d, 0xcb, 0x37, 0x81, 0x05, 0xd6, 0xb0, 0x52,
+	0x26, 0xf8, 0x52, 0xfe, 0x71, 0xa8, 0xf7, 0x4a, 0x26, 0x6a, 0x8b, 0x66, 0x7e, 0x09, 0x9e, 0x7c,
+	0x56, 0xd6, 0x13, 0x46, 0x30, 0x42, 0x82, 0xbb, 0x70, 0x47, 0x96, 0x9b, 0x64, 0x99, 0x0c, 0x0a,
+	0xcd, 0x1a, 0x4c, 0xa1, 0xbf, 0x19, 0xd6, 0x4c, 0xeb, 0x47, 0xef, 0xd4, 0x7f, 0xf4, 0xc1, 0x79,
+	0x29, 0x46, 0xf3, 0x7c, 0x07, 0xf4, 0xbe, 0x96, 0xa1, 0x39, 0x0c, 0xc9, 0xa2, 0x04, 0x73, 0x73,
+	0x2c, 0x66, 0xbd, 0x6d, 0x01, 0xfe, 0xef, 0xae, 0xd6, 0x02, 0x34, 0xa1, 0xe3, 0x9f, 0x1e, 0x1c,
+	0x4f, 0x14, 0xcf, 0x94, 0xf2, 0xab, 0x74, 0x46, 0x49, 0x0e, 0x9e, 0x1c, 0x37, 0x79, 0xba, 0xbf,
+	0xb1, 0x4d, 0x17, 0x19, 0x3c, 0xab, 0x81, 0xd0, 0xad, 0x37, 0x88, 0x80, 0xb6, 0x1a, 0x1c, 0x19,
+	0xef, 0x85, 0x57, 0xec, 0x63, 0x70, 0x56, 0x0b, 0x63, 0x92, 0xaa, 0x39, 0x5a, 0x90, 0x56, 0x7c,
+	0xc4, 0x82, 0x74, 0x87, 0x4b, 0x20, 0xa9, 0xba, 0x01, 0x0b, 0xd2, 0x8a, 0xa1, 0x58, 0x90, 0xee,
+	0xf0, 0x17, 0x24, 0x55, 0xf6, 0x60, 0x41, 0x5a, 0xb1, 0x22, 0x0b, 0xd2, 0xaa, 0xf7, 0x04, 0x8d,
+	0xf1, 0x2f, 0x0f, 0x8e, 0xa4, 0xcc, 0xae, 0x27, 0x29, 0x43, 0xc5, 0x96, 0x92, 0xda, 0x78, 0x0d,
+	0x0d, 0xf2, 0x03, 0x3a, 0xda, 0x30, 0xc8, 0x73, 0x2b, 0xfc, 0x96, 0xe3, 0x0c, 0x5e, 0xd4, 0x44,
+	0x1d, 0x20, 0x66, 0xf3, 0xb0, 0x67, 0xb5, 0x30, 0x07, 0x88, 0xb9, 0x1e, 0xe9, 0x0e, 0xc7, 0xb9,
+	0x8e, 0x98, 0xeb, 0x91, 0x56, 0xbd, 0x2a, 0x68, 0x7c, 0x6e, 0xe3, 0x77, 0xe2, 0xd9, 0x9f, 0x00,
+	0x00, 0x00, 0xff, 0xff, 0x78, 0x13, 0x36, 0x6f, 0x46, 0x0a, 0x00, 0x00,
 }
