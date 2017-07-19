@@ -3,19 +3,19 @@ syntax = "proto3";
 package org.dakstudios.srv.auth.account;
 
 service AccountService {
-    rpc Read(ReadUserRequest) returns (ReadUserResponse) {}
-    rpc Create(CreateUserRequest) returns (CreateUserResponse) {}
-    rpc Update(UpdateUserRequest) returns (UpdateUserResponse) {}
-    rpc Delete(DeleteUserRequest) returns (DeleteUserResponse) {}
-    rpc Search(SearchUserRequest) returns (SearchUserResponse) {}
+    rpc ReadUser(ReadUserRequest) returns (ReadUserResponse) {}
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
+    rpc SearchUser(SearchUserRequest) returns (SearchUserResponse) {}
 }
 
 service RoleService {
-    rpc Read(ReadRoleRequest) returns (ReadRoleResponse) {}
-    rpc ReadAll(ReadAllRolesRequest) returns (ReadAllRolesResponse) {}
-    rpc Create(CreateRoleRequest) returns (CreateRoleResponse) {}
-    rpc Update(UpdateRoleRequest) returns (UpdateRoleResponse) {}
-    rpc Delete(DeleteRoleRequest) returns (DeleteRoleResponse) {}
+    rpc ReadRole(ReadRoleRequest) returns (ReadRoleResponse) {}
+    rpc ReadAllRoles(ReadAllRolesRequest) returns (ReadAllRolesResponse) {}
+    rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {}
+    rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {}
+    rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {}
 }
 
 message User {

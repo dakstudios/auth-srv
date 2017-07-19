@@ -8,7 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 
 	"github.com/dakstudios/auth-srv/db"
-	jwtAuth "github.com/dakstudios/auth-srv/proto/jwt"
+	auth "github.com/dakstudios/auth-srv/proto/auth"
 )
 
 const (
@@ -22,7 +22,7 @@ type userClaims struct {
 
 type Auth struct{}
 
-func (a *Auth) Authenticate(ctx context.Context, req *jwtAuth.AuthenticateRequest, res *jwtAuth.AuthenticateResponse) error {
+func (a *Auth) Authenticate(ctx context.Context, req *auth.AuthenticateRequest, res *auth.AuthenticateResponse) error {
 	if len(req.Email) == 0 || len(req.Password) == 0 {
 		return errors.BadRequest("org.dakstudios.srv.auth", "invalid_request")
 	}
@@ -50,12 +50,12 @@ func (a *Auth) Authenticate(ctx context.Context, req *jwtAuth.AuthenticateReques
 		return errors.InternalServerError("org.dakstudios.srv.auth", "server_error")
 	}
 
-	res.Token = &jwtAuth.Token{Token: signed}
+	res.Token = &auth.Token{Token: signed}
 
 	return nil
 }
 
-func (a *Auth) Authorize(ctx context.Context, req *jwtAuth.AuthorizeRequest, res *jwtAuth.AuthorizeResponse) error {
+func (a *Auth) Authorize(ctx context.Context, req *auth.AuthorizeRequest, res *auth.AuthorizeResponse) error {
 	if len(req.Token.Token) == 0 || len(req.Permission) == 0 {
 		return errors.BadRequest("org.dakstudios.srv.auth", "invalid_request")
 	}
