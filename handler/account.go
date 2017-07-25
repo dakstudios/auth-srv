@@ -13,12 +13,12 @@ type Account struct{}
 
 func (a *Account) ReadUser(ctx context.Context, req *account.ReadUserRequest, res *account.ReadUserResponse) error {
 	if len(req.Id) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.ReadUser", "invalid_id")
+		return errors.BadRequest("srv.auth.ReadUser", "invalid_id")
 	}
 
 	user, err := db.ReadUser(req.Id)
 	if err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.ReadUser", err.Error())
+		return errors.InternalServerError("srv.auth.ReadUser", err.Error())
 	}
 
 	res.Account = user
@@ -28,19 +28,19 @@ func (a *Account) ReadUser(ctx context.Context, req *account.ReadUserRequest, re
 
 func (a *Account) CreateUser(ctx context.Context, req *account.CreateUserRequest, res *account.CreateUserResponse) error {
 	if req.Account == nil {
-		return errors.BadRequest("org.dakstudios.srv.auth.CreateUser", "invalid_account")
+		return errors.BadRequest("srv.auth.CreateUser", "invalid_account")
 	}
 
 	if len(req.Account.Email) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.CreateUser", "invalid_email")
+		return errors.BadRequest("srv.auth.CreateUser", "invalid_email")
 	}
 
 	if len(req.Account.Password) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.CreateUser", "invalid_password")
+		return errors.BadRequest("srv.auth.CreateUser", "invalid_password")
 	}
 
 	if err := db.CreateUser(req.Account); err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.CreateUser", err.Error())
+		return errors.InternalServerError("srv.auth.CreateUser", err.Error())
 	}
 
 	return nil
@@ -48,19 +48,19 @@ func (a *Account) CreateUser(ctx context.Context, req *account.CreateUserRequest
 
 func (a *Account) UpdateUser(ctx context.Context, req *account.UpdateUserRequest, res *account.UpdateUserResponse) error {
 	if req.Account == nil {
-		return errors.BadRequest("org.dakstudios.srv.auth.UpdateUser", "invalid_account")
+		return errors.BadRequest("srv.auth.UpdateUser", "invalid_account")
 	}
 
 	if len(req.Account.Id) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.UpdateUser", "invalid_id")
+		return errors.BadRequest("srv.auth.UpdateUser", "invalid_id")
 	}
 
 	if len(req.Account.Email) > 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.UpdateUser", "cant_update_email")
+		return errors.BadRequest("srv.auth.UpdateUser", "cant_update_email")
 	}
 
 	if err := db.UpdateUser(req.Account); err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.UpdateUser", err.Error())
+		return errors.InternalServerError("srv.auth.UpdateUser", err.Error())
 	}
 
 	return nil
@@ -68,11 +68,11 @@ func (a *Account) UpdateUser(ctx context.Context, req *account.UpdateUserRequest
 
 func (a *Account) DeleteUser(ctx context.Context, req *account.DeleteUserRequest, res *account.DeleteUserResponse) error {
 	if len(req.Id) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.DeleteUser", "invalid_id")
+		return errors.BadRequest("srv.auth.DeleteUser", "invalid_id")
 	}
 
 	if err := db.DeleteUser(req.Id); err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.DeleteUser", err.Error())
+		return errors.InternalServerError("srv.auth.DeleteUser", err.Error())
 	}
 
 	return nil
@@ -89,7 +89,7 @@ func (a *Account) SearchUser(ctx context.Context, req *account.SearchUserRequest
 
 	accounts, err := db.SearchUsers(req.Limit, req.Offset)
 	if err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.SearchUser", err.Error())
+		return errors.InternalServerError("srv.auth.SearchUser", err.Error())
 	}
 
 	res.Accounts = accounts
@@ -99,12 +99,12 @@ func (a *Account) SearchUser(ctx context.Context, req *account.SearchUserRequest
 
 func (a *Account) ReadRole(ctx context.Context, req *account.ReadRoleRequest, res *account.ReadRoleResponse) error {
 	if len(req.Id) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.ReadRole", "invalid_id")
+		return errors.BadRequest("srv.auth.ReadRole", "invalid_id")
 	}
 
 	role, err := db.ReadRole(req.Id)
 	if err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.ReadRole", err.Error())
+		return errors.InternalServerError("srv.auth.ReadRole", err.Error())
 	}
 
 	res.Role = role
@@ -115,7 +115,7 @@ func (a *Account) ReadRole(ctx context.Context, req *account.ReadRoleRequest, re
 func (a *Account) ReadAllRoles(ctx context.Context, req *account.ReadAllRolesRequest, res *account.ReadAllRolesResponse) error {
 	roles, err := db.ReadAllRoles()
 	if err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.ReadAllRoles", err.Error())
+		return errors.InternalServerError("srv.auth.ReadAllRoles", err.Error())
 	}
 
 	res.Roles = roles
@@ -125,15 +125,15 @@ func (a *Account) ReadAllRoles(ctx context.Context, req *account.ReadAllRolesReq
 
 func (a *Account) CreateRole(ctx context.Context, req *account.CreateRoleRequest, res *account.CreateRoleResponse) error {
 	if req.Role == nil {
-		return errors.BadRequest("org.dakstudios.srv.auth.CreateRole", "invalid_role")
+		return errors.BadRequest("srv.auth.CreateRole", "invalid_role")
 	}
 
 	if len(req.Role.Name) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.CreateRole", "invalid_name")
+		return errors.BadRequest("srv.auth.CreateRole", "invalid_name")
 	}
 
 	if err := db.CreateRole(req.Role); err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.CreateRole", err.Error())
+		return errors.InternalServerError("srv.auth.CreateRole", err.Error())
 	}
 
 	return nil
@@ -141,15 +141,15 @@ func (a *Account) CreateRole(ctx context.Context, req *account.CreateRoleRequest
 
 func (a *Account) UpdateRole(ctx context.Context, req *account.UpdateRoleRequest, res *account.UpdateRoleResponse) error {
 	if req.Role == nil {
-		return errors.BadRequest("org.dakstudios.srv.auth.UpdateRole", "invalid_role")
+		return errors.BadRequest("srv.auth.UpdateRole", "invalid_role")
 	}
 
 	if len(req.Role.Id) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.UpdateRole", "invalid_id")
+		return errors.BadRequest("srv.auth.UpdateRole", "invalid_id")
 	}
 
 	if err := db.UpdateRole(req.Role); err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.UpdateRole", err.Error())
+		return errors.InternalServerError("srv.auth.UpdateRole", err.Error())
 	}
 
 	return nil
@@ -157,11 +157,11 @@ func (a *Account) UpdateRole(ctx context.Context, req *account.UpdateRoleRequest
 
 func (a *Account) DeleteRole(ctx context.Context, req *account.DeleteRoleRequest, res *account.DeleteRoleResponse) error {
 	if len(req.Id) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth.DeleteRole", "invalid_id")
+		return errors.BadRequest("srv.auth.DeleteRole", "invalid_id")
 	}
 
 	if err := db.DeleteRole(req.Id); err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth.DeleteRole", err.Error())
+		return errors.InternalServerError("srv.auth.DeleteRole", err.Error())
 	}
 
 	return nil

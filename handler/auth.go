@@ -24,30 +24,30 @@ type Auth struct{}
 
 func (a *Auth) Authenticate(ctx context.Context, req *auth.AuthenticateRequest, res *auth.AuthenticateResponse) error {
 	if len(req.Email) == 0 || len(req.Password) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth", "invalid_request")
+		return errors.BadRequest("srv.auth.Authenticate", "invalid_request")
 	}
 
 	user, err := db.FindUser(req.Email)
 	if err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth", "server_error")
+		return errors.InternalServerError("srv.auth.Authenticate", "server_error")
 	}
 
 	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
-		return errors.BadRequest("org.dakstudios.srv.auth", "access_denied")
+		return errors.BadRequest("srv.auth.Authenticate", "access_denied")
 	}
 
 	claims := userClaims{
 		user.Id,
 		jwt.StandardClaims{
 			ExpiresAt: 15000,
-			Issuer:    "org.dakstudios.srv.auth",
+			Issuer:    "org.dakstudio.srv.auth",
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signed, err := token.SignedString([]byte(jwtSecret))
 	if err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth", "server_error")
+		return errors.InternalServerError("srv.auth.Authenticate", "server_error")
 	}
 
 	res.Token = &auth.Token{Token: signed}
@@ -57,7 +57,7 @@ func (a *Auth) Authenticate(ctx context.Context, req *auth.AuthenticateRequest, 
 
 func (a *Auth) Authorize(ctx context.Context, req *auth.AuthorizeRequest, res *auth.AuthorizeResponse) error {
 	if len(req.Token.Token) == 0 || len(req.Permission) == 0 {
-		return errors.BadRequest("org.dakstudios.srv.auth", "invalid_request")
+		return errors.BadRequest("srv.auth.Authenticate", "invalid_request")
 	}
 
 	token, err := jwt.ParseWithClaims(req.Token.Token, &userClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -65,17 +65,17 @@ func (a *Auth) Authorize(ctx context.Context, req *auth.AuthorizeRequest, res *a
 	})
 
 	if !token.Valid {
-		return errors.BadRequest("org.dakstudios.srv.auth", "access_denied")
+		return errors.BadRequest("srv.auth.Authenticate", "access_denied")
 	}
 
 	claims, ok := token.Claims.(*userClaims)
 	if !ok {
-		return errors.InternalServerError("org.dakstudios.srv.auth", "server_error")
+		return errors.InternalServerError("srv.auth.Authenticate", "server_error")
 	}
 
 	authorized, err := db.Authorize(claims.ID, req.Permission)
 	if err != nil {
-		return errors.InternalServerError("org.dakstudios.srv.auth", "server_error")
+		return errors.InternalServerError("srv.auth.Authenticate", "server_error")
 	}
 
 	res.Authorized = authorized
