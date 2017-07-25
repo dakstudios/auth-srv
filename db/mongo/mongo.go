@@ -43,6 +43,10 @@ type mongo struct {
 	db *mgo.Database
 }
 
+var (
+	Url = "127.0.0.1"
+)
+
 const (
 	hashCost int = 16
 )
@@ -55,7 +59,7 @@ func (m *mongo) Init() error {
 	var session *mgo.Session
 	var err error
 
-	if session, err = mgo.Dial("127.0.0.1"); err != nil {
+	if session, err = mgo.Dial(Url); err != nil {
 		return err
 	}
 
