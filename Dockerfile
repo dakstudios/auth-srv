@@ -1,4 +1,3 @@
 FROM alpine:3.2
-ADD . /app
-WORKDIR /app
-ENTRYPOINT [ "/app/auth-srv" ]
+ADD auth-srv /auth-srv
+ENTRYPOINT [ "/auth-srv" ]
