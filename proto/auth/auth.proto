@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package org.dakstudios.srv.auth.jwt;
+package org.dakstudios.srv.auth.auth;
 
-service JWT {
+service Auth {
     rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
     rpc Authorize(AuthorizeRequest) returns (AuthorizeResponse) {}
 }

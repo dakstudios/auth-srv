@@ -172,19 +172,24 @@ func (m *mongo) ReadUser(id string) (*account.User, error) {
 	return user, nil
 }
 
-func (m *mongo) CreateUser(user *account.User) error {
-	roleIds = []bson.ObjectId{}
-	for _, role := range user.Roles {
+func (m *mongo) CreateUser(account *account.User) error {
+	roleIds := []bson.ObjectId{}
+	for _, role := range account.Roles {
 		roleIds = append(roleIds, bson.ObjectId(role.Id))
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(account.Password), hashCost)
+	if err != nil {
+		return err
 	}
 
 	acc := user{
 		ID:           bson.NewObjectId(),
 		RoleIDs:      roleIds,
-		Email:        user.Email,
-		PasswordHash: bcrypt.GenerateFromPassword([]byte(user.Password), hashCost),
-		FirstName:    user.FirstName,
-		LastName:     user.LastName,
+		Email:        account.Email,
+		PasswordHash: string(hash),
+		FirstName:    account.FirstName,
+		LastName:     account.LastName,
 		Created:      time.Now(),
 		Updated:      time.Unix(0, 0),
 	}
@@ -192,22 +197,27 @@ func (m *mongo) CreateUser(user *account.User) error {
 	return m.db.C("accounts").Insert(&acc)
 }
 
-func (m *mongo) UpdateUser(user *account.User) error {
-	roleIds = []bson.ObjectId{}
-	for _, role := range user.Roles {
+func (m *mongo) UpdateUser(account *account.User) error {
+	roleIds := []bson.ObjectId{}
+	for _, role := range account.Roles {
 		roleIds = append(roleIds, bson.ObjectId(role.Id))
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(account.Password), hashCost)
+	if err != nil {
+		return err
 	}
 
 	acc := user{
 		RoleIDs:      roleIds,
-		Email:        user.Email,
-		PasswordHash: bcrypt.GenerateFromPassword([]byte(user.Password), hashCost),
-		FirstName:    user.FirstName,
-		LastName:     user.LastName,
+		Email:        account.Email,
+		PasswordHash: string(hash),
+		FirstName:    account.FirstName,
+		LastName:     account.LastName,
 		Updated:      time.Now(),
 	}
 
-	return m.db.C("accounts").UpdateId(user.Id, &acc)
+	return m.db.C("accounts").UpdateId(account.Id, &acc)
 }
 
 func (m *mongo) DeleteUser(id string) error {
@@ -216,8 +226,8 @@ func (m *mongo) DeleteUser(id string) error {
 
 func (m *mongo) SearchUsers(limit, offset int64) ([]*account.User, error) {
 	users := []user{}
-	if err := m.db.C("accounts").Find().Skip(offset).Limit(limit).All(&users); err != nil {
-		return err
+	if err := m.db.C("accounts").Find(nil).Skip(int(offset)).Limit(int(limit)).All(&users); err != nil {
+		return nil, err
 	}
 
 	accs := []*account.User{}
@@ -226,7 +236,7 @@ func (m *mongo) SearchUsers(limit, offset int64) ([]*account.User, error) {
 		for _, roleId := range user.RoleIDs {
 			r := role{}
 			if err := m.db.C("roles").FindId(roleId).One(&r); err != nil {
-				return err
+				return nil, err
 			}
 
 			roles = append(roles, &account.Role{
@@ -253,7 +263,7 @@ func (m *mongo) SearchUsers(limit, offset int64) ([]*account.User, error) {
 // role
 func (m *mongo) ReadRole(id string) (*account.Role, error) {
 	r := role{}
-	if err := m.db.C("roles").FindId(id).One(&role); err != nil {
+	if err := m.db.C("roles").FindId(id).One(&r); err != nil {
 		return nil, err
 	}
 
@@ -268,7 +278,7 @@ func (m *mongo) ReadRole(id string) (*account.Role, error) {
 
 func (m *mongo) ReadAllRoles() ([]*account.Role, error) {
 	r := []role{}
-	if err := m.db.C("roles").Find().All(&r); err != nil {
+	if err := m.db.C("roles").Find(nil).All(&r); err != nil {
 		return nil, err
 	}
 
@@ -284,23 +294,23 @@ func (m *mongo) ReadAllRoles() ([]*account.Role, error) {
 	return roles, nil
 }
 
-func (m *mongo) CreateRole(role *account.Role) error {
+func (m *mongo) CreateRole(_role *account.Role) error {
 	r := role{
 		ID:          bson.NewObjectId(),
-		Name:        role.Name,
-		Permissions: role.Permissions,
+		Name:        _role.Name,
+		Permissions: _role.Permissions,
 	}
 
 	return m.db.C("roles").Insert(&r)
 }
 
-func (m *mongo) UpdateRole(role *account.Role) error {
+func (m *mongo) UpdateRole(_role *account.Role) error {
 	r := role{
-		Name:        role.Name,
-		Permissions: role.Permissions,
+		Name:        _role.Name,
+		Permissions: _role.Permissions,
 	}
 
-	return m.db.C("roles").UpdateId(role.Id, &r)
+	return m.db.C("roles").UpdateId(_role.Id, &r)
 }
 
 func (m *mongo) DeleteRole(id string) error {
@@ -315,31 +325,31 @@ func (m *mongo) Authorize(id, permission string) (bool, error) {
 	}
 
 	// collect all user permissions
-	iter := m.db.C("roles").Find(bson.M{"_id", bson.M{"$in": acc.RoleIDs}}).Iter()
+	iter := m.db.C("roles").Find(bson.M{"_id": bson.M{"$in": acc.RoleIDs}}).Iter()
 	r := role{}
 	perms := []string{}
 	for iter.Next(&r) {
-		perms = append(perms, r.Permissions)
+		perms = append(perms, r.Permissions...)
 	}
 
 	if strings.Contains(permission, ".") { // permission supports masks
 		for _, perm := range perms {
-			if perm[len(perm)-1] == "*" { // supports * only as last character
-				withoutDots = strings.Replace(perm, ".", "", -1)
-				withoutMask = strings.Replace(withoutDots, "*", "", -1)
-				permissionWithoutDots = strings.Replace(permission, ".", "", -1)
+			if string(perm[len(perm)-1]) == "*" { // supports * only as last character
+				withoutDots := strings.Replace(perm, ".", "", -1)
+				withoutMask := strings.Replace(withoutDots, "*", "", -1)
+				permissionWithoutDots := strings.Replace(permission, ".", "", -1)
 
 				if strings.HasPrefix(permissionWithoutDots, withoutMask) {
-					return true
+					return true, nil
 				}
 			} else if perm == permission {
-				return true
+				return true, nil
 			}
 		}
 
-		return false
+		return false, nil
 	} else {
-		return sliceContains(perms, permission)
+		return sliceContains(perms, permission), nil
 	}
 }
 

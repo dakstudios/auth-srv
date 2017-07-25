@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"golang.org/x/net/context"
+
 	"github.com/micro/go-micro/errors"
 
 	"github.com/dakstudios/auth-srv/db"
